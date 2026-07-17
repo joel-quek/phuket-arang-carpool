@@ -16,10 +16,10 @@
       --blue: #2563eb;
       --green: #16a34a;
       --red: #dc2626;
-      --grey: #f3f4f6;
       --border: #d1d5db;
       --dark: #111827;
       --muted: #6b7280;
+      --passenger-bg: #f3f4f6;
     }
 
     * {
@@ -91,6 +91,35 @@
       color: var(--red);
     }
 
+    .passengers {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 10px;
+      background: var(--passenger-bg);
+    }
+
+    .passengers-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    .passenger-list {
+      margin: 0;
+      padding-left: 22px;
+    }
+
+    .passenger-list li {
+      margin: 5px 0;
+    }
+
+    .empty-car {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      font-style: italic;
+    }
+
     button {
       margin-top: 15px;
       width: 100%;
@@ -150,7 +179,7 @@
 
   <header>
     <h1>🚗 Phuket Arang Carpool</h1>
-    <p></p>
+    <p>First Come • First Served</p>
   </header>
 
   <main>
@@ -170,10 +199,26 @@
 
     <div class="driver">
       <h2>🚘 Ping</h2>
-      <div class="route">East</div>
 
-      <div class="seats" id="seats-Ping">
+      <div class="route">
+        East
+      </div>
+
+      <div
+        class="seats"
+        id="seats-Ping"
+      >
         Loading seats...
+      </div>
+
+      <div class="passengers">
+        <div class="passengers-title">
+          Passengers
+        </div>
+
+        <div id="passengers-Ping">
+          Loading...
+        </div>
       </div>
 
       <button
@@ -187,10 +232,26 @@
 
     <div class="driver">
       <h2>🚘 Aaron</h2>
-      <div class="route">Caldecott</div>
 
-      <div class="seats" id="seats-Aaron">
+      <div class="route">
+        Caldecott
+      </div>
+
+      <div
+        class="seats"
+        id="seats-Aaron"
+      >
         Loading seats...
+      </div>
+
+      <div class="passengers">
+        <div class="passengers-title">
+          Passengers
+        </div>
+
+        <div id="passengers-Aaron">
+          Loading...
+        </div>
       </div>
 
       <button
@@ -204,10 +265,26 @@
 
     <div class="driver">
       <h2>🚘 YK</h2>
-      <div class="route">Church</div>
 
-      <div class="seats" id="seats-YK">
+      <div class="route">
+        Church
+      </div>
+
+      <div
+        class="seats"
+        id="seats-YK"
+      >
         Loading seats...
+      </div>
+
+      <div class="passengers">
+        <div class="passengers-title">
+          Passengers
+        </div>
+
+        <div id="passengers-YK">
+          Loading...
+        </div>
       </div>
 
       <button
@@ -221,10 +298,26 @@
 
     <div class="driver">
       <h2>🚘 Jia Hwan</h2>
-      <div class="route">Church</div>
 
-      <div class="seats" id="seats-Jiahwan">
+      <div class="route">
+        Church
+      </div>
+
+      <div
+        class="seats"
+        id="seats-Jiahwan"
+      >
         Loading seats...
+      </div>
+
+      <div class="passengers">
+        <div class="passengers-title">
+          Passengers
+        </div>
+
+        <div id="passengers-Jiahwan">
+          Loading...
+        </div>
       </div>
 
       <button
@@ -258,20 +351,28 @@
     let latestRideData = null;
 
     function showStatus(message, type) {
-      const status = document.getElementById("status");
+      const status =
+        document.getElementById("status");
 
       status.textContent = message;
       status.className = type;
     }
 
-    function makeRequest(parameters, responseHandler) {
+    function makeRequest(
+      parameters,
+      responseHandler
+    ) {
       requestNumber += 1;
 
       const callbackName =
-        "carpoolCallback" + requestNumber;
+        "carpoolCallback" +
+        requestNumber;
 
-      parameters.callback = callbackName;
-      parameters.cacheBust = Date.now();
+      parameters.callback =
+        callbackName;
+
+      parameters.cacheBust =
+        Date.now();
 
       const query =
         new URLSearchParams(parameters);
@@ -279,17 +380,20 @@
       const script =
         document.createElement("script");
 
-      window[callbackName] = function(response) {
-        try {
-          responseHandler(response);
-        } finally {
-          delete window[callbackName];
-          script.remove();
-        }
-      };
+      window[callbackName] =
+        function(response) {
+          try {
+            responseHandler(response);
+          } finally {
+            delete window[callbackName];
+            script.remove();
+          }
+        };
 
       script.src =
-        SCRIPT_URL + "?" + query.toString();
+        SCRIPT_URL +
+        "?" +
+        query.toString();
 
       script.onerror = function() {
         delete window[callbackName];
@@ -302,10 +406,14 @@
           "error"
         );
 
-        updateRideDisplay(latestRideData);
+        updateRideDisplay(
+          latestRideData
+        );
       };
 
-      document.body.appendChild(script);
+      document.body.appendChild(
+        script
+      );
     }
 
     function loadStatus() {
@@ -324,8 +432,12 @@
             return;
           }
 
-          latestRideData = response.rides;
-          updateRideDisplay(response.rides);
+          latestRideData =
+            response.rides;
+
+          updateRideDisplay(
+            response.rides
+          );
         }
       );
     }
@@ -336,7 +448,9 @@
       }
 
       const nameInput =
-        document.getElementById("name");
+        document.getElementById(
+          "name"
+        );
 
       const name =
         nameInput.value.trim();
@@ -363,7 +477,10 @@
       }
 
       bookingInProgress = true;
-      updateRideDisplay(latestRideData);
+
+      updateRideDisplay(
+        latestRideData
+      );
 
       showStatus(
         "Booking your seat with " +
@@ -382,8 +499,12 @@
           bookingInProgress = false;
 
           if (response.rides) {
-            latestRideData = response.rides;
-            updateRideDisplay(response.rides);
+            latestRideData =
+              response.rides;
+
+            updateRideDisplay(
+              response.rides
+            );
           } else {
             loadStatus();
           }
@@ -411,50 +532,135 @@
         return;
       }
 
-      DRIVERS.forEach(function(driver) {
-        const ride = rides[driver];
+      DRIVERS.forEach(
+        function(driver) {
+          const ride =
+            rides[driver];
 
-        const seats =
-          document.getElementById(
-            "seats-" + driver
+          const seats =
+            document.getElementById(
+              "seats-" + driver
+            );
+
+          const button =
+            document.getElementById(
+              "button-" + driver
+            );
+
+          const passengerBox =
+            document.getElementById(
+              "passengers-" + driver
+            );
+
+          if (!ride) {
+            seats.textContent =
+              "Unavailable";
+
+            seats.className =
+              "seats full";
+
+            button.textContent =
+              "Unavailable";
+
+            button.disabled = true;
+
+            passengerBox.textContent =
+              "Unavailable";
+
+            return;
+          }
+
+          displayPassengers(
+            passengerBox,
+            ride.passengers || []
           );
 
-        const button =
-          document.getElementById(
-            "button-" + driver
-          );
+          if (ride.remaining <= 0) {
+            seats.textContent =
+              "FULL";
 
-        if (!ride) {
-          seats.textContent = "Unavailable";
-          seats.className = "seats full";
-          button.textContent = "Unavailable";
-          button.disabled = true;
-          return;
+            seats.className =
+              "seats full";
+
+            button.textContent =
+              "Full";
+
+            button.disabled = true;
+
+            return;
+          }
+
+          seats.textContent =
+            ride.remaining +
+            " Seat" +
+            (
+              ride.remaining === 1
+                ? ""
+                : "s"
+            ) +
+            " Remaining";
+
+          seats.className = "seats";
+
+          button.textContent =
+            "Book Seat";
+
+          button.disabled =
+            bookingInProgress;
         }
+      );
+    }
 
-        if (ride.remaining <= 0) {
-          seats.textContent = "FULL";
-          seats.className = "seats full";
-          button.textContent = "Full";
-          button.disabled = true;
-          return;
+    function displayPassengers(
+      container,
+      passengers
+    ) {
+      container.innerHTML = "";
+
+      if (passengers.length === 0) {
+        const emptyMessage =
+          document.createElement("p");
+
+        emptyMessage.className =
+          "empty-car";
+
+        emptyMessage.textContent =
+          "No passengers yet";
+
+        container.appendChild(
+          emptyMessage
+        );
+
+        return;
+      }
+
+      const list =
+        document.createElement("ul");
+
+      list.className =
+        "passenger-list";
+
+      passengers.forEach(
+        function(passenger) {
+          const item =
+            document.createElement("li");
+
+          item.textContent =
+            passenger;
+
+          list.appendChild(item);
         }
+      );
 
-        seats.textContent =
-          ride.remaining +
-          " Seat" +
-          (ride.remaining === 1 ? "" : "s") +
-          " Remaining";
-
-        seats.className = "seats";
-        button.textContent = "Book Seat";
-        button.disabled = bookingInProgress;
-      });
+      container.appendChild(list);
     }
 
     loadStatus();
 
-    setInterval(loadStatus, 30000);
+    setInterval(
+      loadStatus,
+      30000
+    );
   </script>
 
 </body>
